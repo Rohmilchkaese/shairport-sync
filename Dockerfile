@@ -68,5 +68,6 @@ RUN apk -U add \
         /root/shairport-sync \
 	/root/alac
 COPY bootstrap.sh /start
+RUN chmod u+x /start
 ENV AIRPLAY_NAME Docker
 ENTRYPOINT [ "/start" ]

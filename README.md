@@ -18,6 +18,7 @@ sudo docker run -d \
 rohmilkaese/shairport-sync \
 -vu -c /conf/shairport.conf
 ```
+Place a valid shairport.conf file in directory you run the docker run command.
 
 ## Docker Compose
 
@@ -35,3 +36,4 @@ services:
     command: -vu -c conf/shairport.conf
     network_mode: "host"
 ```
+Place a valid shairport.conf file in /conf directory.

@@ -35,7 +35,7 @@ services:
     container_name: shairport-sync
     image: rohmilkaese/shairport-sync:latest
     volumes:
-       - /conf/shairport.conf
+       - ./conf/shairport.conf:/conf/shairport.conf
     devices:
        - /dev/snd
     command: -vu -c conf/shairport.conf

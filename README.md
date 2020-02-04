@@ -2,6 +2,7 @@
 shairport-sync docker image - including Apple Alac decoder - based on Alpine Linux 
 
 Link to [Docker Hub](https://hub.docker.com/r/rohmilkaese/shairport-sync)
+
 Supported architectures ready to download via Docker Hub: 
 linux/386, linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/ppc64le, linux/s390x 
 

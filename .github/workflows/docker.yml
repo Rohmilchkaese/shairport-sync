@@ -20,15 +20,6 @@ jobs:
   # Build the container image for multiple architectures
   build:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        arch:
-          - linux/386
-          - linux/amd64
-          - linux/arm/v6
-          - linux/arm/v7
-          - linux/arm64
 
     steps:
       - uses: actions/checkout@v2
@@ -37,7 +28,7 @@ jobs:
       - name: Build
         run: |
           docker buildx build \
-            --platform ${{ matrix.arch }} \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 \
             --output type=docker,dest=image.tar \
             .
 

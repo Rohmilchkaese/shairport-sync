@@ -1,14 +1,15 @@
-# shairport-sync
-shairport-sync docker image - including Apple Alac decoder - based on Alpine Linux 
+![Docker](https://github.com/rohmilchkaese/shairport-sync/workflows/Docker/badge.svg)
 
-Link to [Docker Hub](https://hub.docker.com/r/rohmilkaese/shairport-sync)
+# Shairport Sync as a Docker Image
 
-Supported architectures ready to download via Docker Hub: 
-linux/386, linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64, linux/ppc64le, linux/s390x 
+[Shairport Sync](https://github.com/mikebrady/shairport-sync) is an Apple AirPlay receiver. It can receive audio directly from iOS devices, iTunes, etc. Multiple instances of Shairport Sync will stay in sync with each other and other AirPlay devices when used with a compatible multi-room player, such as iTunes or [forked-daapd](https://github.com/jasonmc/forked-daapd).
 
-[shairport-sync](https://github.com/mikebrady/shairport-sync) is an Apple AirPlay receiver. It can receive audio directly from iOS devices, iTunes, etc. Multiple instances of shairport-sync will stay in sync with each other and other AirPlay devices when used with a compatible multi-room player, such as iTunes or [forked-daapd](https://github.com/jasonmc/forked-daapd).
+This Docker image provides an easy way to deploy Shairport Sync. Based on Alpine Linux, the image is very small and it is built for multiple platforms, making it suitable for embedded devices such as Raspberry Pi. Support for the Apple Lossless Audio Codec (ALAC) is included.
+
+[See available images on Docker Hub.](https://hub.docker.com/r/rohmilkaese/shairport-sync)
 
 This is a fork of the project by [Kevin Eye](https://github.com/kevineye/docker-shairport-sync).
+
 
 ## Docker Run
 
@@ -16,12 +17,12 @@ Command:
 
 ```bash
 sudo docker run -d \
--v $PWD:/conf/ \
---net host \
---device /dev/snd \
---name shairport-sync \
-rohmilkaese/shairport-sync \
--vu -c /conf/shairport.conf
+    -v $PWD:/conf/ \
+    --net host \
+    --device /dev/snd \
+    --name shairport-sync \
+    rohmilkaese/shairport-sync \
+    -vu -c /conf/shairport.conf
 ```
 Place a valid shairport.conf file in directory you run the docker run command.
 

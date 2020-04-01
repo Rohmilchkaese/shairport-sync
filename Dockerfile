@@ -1,7 +1,8 @@
 FROM alpine:edge
 MAINTAINER 37877524+Rohmilchkaese@users.noreply.github.com
 
-RUN apk -U add \
+RUN env \
+&& apk -U add \
 	git \
 	build-base \
 	autoconf \
@@ -19,7 +20,7 @@ RUN apk -U add \
 && cd /root \
 && git clone "https://github.com/mikebrady/alac.git" \
 && cd /root/alac \
-&& ([ -n "$ALAC_BRANCH" ] && git checkout origin/"$ALAC_BRANCH") \
+&& ([ -n "$ALAC_BRANCH" ] && git checkout origin/"$ALAC_BRANCH" ;:) \
 && autoreconf -fi \
 && ./configure \
 && make \
@@ -27,7 +28,7 @@ RUN apk -U add \
 && cd /root \
 && git clone "https://github.com/mikebrady/shairport-sync.git" \
 && cd /root/shairport-sync \
-&& ([ -n "$SHAIRPORT_BRANCH" ] && git checkout origin/"$SHAIRPORT_BRANCH") \
+&& ([ -n "$SHAIRPORT_BRANCH" ] && git checkout origin/"$SHAIRPORT_BRANCH" ;:) \
 && autoreconf -i -f \
 && ./configure \
 	--with-alsa \

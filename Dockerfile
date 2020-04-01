@@ -1,6 +1,9 @@
 FROM alpine:edge
 MAINTAINER 37877524+Rohmilchkaese@users.noreply.github.com
 
+ARG ALAC_BRANCH=tags/0.0.7
+ARG SHAIRPORT_BRANCH=master
+
 RUN env \
 && apk -U add \
 	git \
@@ -20,7 +23,7 @@ RUN env \
 && cd /root \
 && git clone "https://github.com/mikebrady/alac.git" \
 && cd /root/alac \
-&& ([ -n "$ALAC_BRANCH" ] && git checkout "$ALAC_BRANCH" ;:) \
+&& git checkout "$ALAC_BRANCH" \
 && autoreconf -fi \
 && ./configure \
 && make \
@@ -28,7 +31,7 @@ RUN env \
 && cd /root \
 && git clone "https://github.com/mikebrady/shairport-sync.git" \
 && cd /root/shairport-sync \
-&& ([ -n "$SHAIRPORT_BRANCH" ] && git checkout "$SHAIRPORT_BRANCH" ;:) \
+&& git checkout "$SHAIRPORT_BRANCH" \
 && autoreconf -i -f \
 && ./configure \
 	--with-alsa \

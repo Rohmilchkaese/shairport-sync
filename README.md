@@ -1,4 +1,4 @@
-![Docker](https://github.com/rohmilchkaese/shairport-sync/workflows/Docker/badge.svg)
+[![Docker](https://github.com/rohmilchkaese/shairport-sync/workflows/Docker/badge.svg)](https://hub.docker.com/repository/docker/rohmilkaese/shairport-sync/general)
 
 # Shairport Sync as a Docker Image
 

@@ -14,7 +14,9 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: shairport-sync
+  IMAGE_NAME: rohmilkaese/shairport-sync
+  DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+  DOCKER_HUB_USER: rohmilkaese
 
 jobs:
   # Build the container image for multiple architectures
@@ -22,39 +24,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # This unusual setup is due to limitations with `docker buildx`. 
+      # See: https://github.com/crazy-max/ghaction-docker-buildx/issues/134
+      - name: Prepare
+        id: prepare
+        run: |
+          # Map git ref branch or tag name to Docker tag version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          # Output build arguments for downstream steps
+          echo ::set-output name=buildx_args::\
+            --platform ${DOCKER_PLATFORMS} \
+            --build-arg VERSION=${VERSION} \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --build-arg VCS_REF=${GITHUB_SHA::8} \
+            --tag ${IMAGE_NAME}:${VERSION} \
+            .
+
       - uses: actions/checkout@v2
       - uses: crazy-max/ghaction-docker-buildx@v1.2.1
-        
+
       - name: Build
         run: |
           docker buildx build \
-            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 \
-            --output type=docker,dest=image.tar \
-            .
+            --output type=image,push=false \
+            ${{ steps.prepare.outputs.buildx_args }}
 
       - name: Log into registry
         if: github.event_name == 'push'
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login --username $DOCKER_HUB_USER --password-stdin
 
-      - name: Push image
+      - name: Push to registry
         if: github.event_name == 'push'
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-
-          docker import image.tar $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          docker buildx build \
+            --output type=image,push=true \
+            ${{ steps.prepare.outputs.buildx_args }}

@@ -34,12 +34,15 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           [ "$VERSION" == "master" ] && VERSION=latest
 
+          # If tagged with a version, build the same version of shairport-sync
+          SHAIRPORT_BRANCH=master
+          [ "$VERSION" != "latest" ] && SHAIRPORT_BRANCH=tags/$VERSION
+
           # Output build arguments for downstream steps
           echo ::set-output name=buildx_args::\
             --platform ${DOCKER_PLATFORMS} \
-            --build-arg VERSION=${VERSION} \
-            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-            --build-arg VCS_REF=${GITHUB_SHA::8} \
+            --build-arg ALAC_BRANCH=tags/0.0.7 \
+            --build-arg SHAIRPORT_BRANCH=${SHAIRPORT_BRANCH} \
             --tag ${IMAGE_NAME}:${VERSION} \
             .
 

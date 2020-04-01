@@ -1,7 +1,11 @@
 FROM alpine:edge
 MAINTAINER 37877524+Rohmilchkaese@users.noreply.github.com
 
-RUN apk -U add \
+ARG ALAC_BRANCH=tags/0.0.7
+ARG SHAIRPORT_BRANCH=master
+
+RUN env \
+&& apk -U add \
 	git \
 	build-base \
 	autoconf \
@@ -16,13 +20,19 @@ RUN apk -U add \
 	xmltoman \
 	libconfig-dev \
 	libstdc++ \
-&& cd /root && git clone "https://github.com/mikebrady/alac.git" \
-&& cd /root/alac &&  autoreconf -fi \
+&& cd /root \
+&& git clone "https://github.com/mikebrady/alac.git" \
+&& cd /root/alac \
+&& git checkout "$ALAC_BRANCH" \
+&& autoreconf -fi \
 && ./configure \
 && make \
 && make install \
-&& cd /root && git clone "https://github.com/mikebrady/shairport-sync.git" \
-&& cd /root/shairport-sync && autoreconf -i -f \
+&& cd /root \
+&& git clone "https://github.com/mikebrady/shairport-sync.git" \
+&& cd /root/shairport-sync \
+&& git checkout "$SHAIRPORT_BRANCH" \
+&& autoreconf -i -f \
 && ./configure \
 	--with-alsa \
         --with-pipe \

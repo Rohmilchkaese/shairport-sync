@@ -20,7 +20,7 @@ RUN env \
 && cd /root \
 && git clone "https://github.com/mikebrady/alac.git" \
 && cd /root/alac \
-&& ([ -n "$ALAC_BRANCH" ] && git checkout origin/"$ALAC_BRANCH" ;:) \
+&& ([ -n "$ALAC_BRANCH" ] && git checkout "$ALAC_BRANCH" ;:) \
 && autoreconf -fi \
 && ./configure \
 && make \
@@ -28,7 +28,7 @@ RUN env \
 && cd /root \
 && git clone "https://github.com/mikebrady/shairport-sync.git" \
 && cd /root/shairport-sync \
-&& ([ -n "$SHAIRPORT_BRANCH" ] && git checkout origin/"$SHAIRPORT_BRANCH" ;:) \
+&& ([ -n "$SHAIRPORT_BRANCH" ] && git checkout "$SHAIRPORT_BRANCH" ;:) \
 && autoreconf -i -f \
 && ./configure \
 	--with-alsa \

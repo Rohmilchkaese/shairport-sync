@@ -1,8 +1,6 @@
-FROM alpine:edge
-MAINTAINER 37877524+Rohmilchkaese@users.noreply.github.com
-
+FROM alpine:3.15.4
 ARG ALAC_BRANCH=tags/0.0.7
-ARG SHAIRPORT_BRANCH=master
+ARG SHAIRPORT_BRANCH=3.3.9
 
 RUN env \
 && apk -U add \

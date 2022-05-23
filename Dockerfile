@@ -1,7 +1,8 @@
-FROM alpine:3.15.4
+FROM alpine:edge
+MAINTAINER 37877524+Rohmilchkaese@users.noreply.github.com
 
 ARG ALAC_BRANCH=tags/0.0.7
-ARG SHAIRPORT_BRANCH=28.3
+ARG SHAIRPORT_BRANCH=master
 
 RUN env \
 && apk -U add \
@@ -28,7 +29,7 @@ RUN env \
 && make \
 && make install \
 && cd /root \
-&& git clone "https://github.com/owntone/owntone-server.git" \
+&& git clone "https://github.com/mikebrady/shairport-sync.git" \
 && cd /root/shairport-sync \
 && git checkout "$SHAIRPORT_BRANCH" \
 && autoreconf -i -f \

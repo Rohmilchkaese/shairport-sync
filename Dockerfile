@@ -45,6 +45,11 @@ RUN env \
         --with-soxr \
         --with-metadata \
 	--with-apple-alac \
+        libplist-dev \
+        libsodium-dev \
+        libgcrypt-dev \
+        ffmpeg-dev \
+        xxd \
 && make \
 && make install \
 && ldconfig / \

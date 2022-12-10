@@ -1,6 +1,6 @@
 FROM alpine:3.15.4
 ARG ALAC_BRANCH=tags/0.0.7
-ARG SHAIRPORT_BRANCH=3.3.9
+ARG SHAIRPORT_BRANCH=4.1
 
 RUN env \
 && apk -U add \
@@ -18,6 +18,11 @@ RUN env \
 	xmltoman \
 	libconfig-dev \
 	libstdc++ \
+        libplist-dev \
+        libsodium-dev \
+        libgcrypt-dev \
+        ffmpeg-dev \
+        xxd \
 && cd /root \
 && git clone "https://github.com/mikebrady/alac.git" \
 && cd /root/alac \
@@ -32,6 +37,7 @@ RUN env \
 && git checkout "$SHAIRPORT_BRANCH" \
 && autoreconf -i -f \
 && ./configure \
+        --with-airplay-2 \
 	--with-alsa \
         --with-pipe \
         --with-avahi \
@@ -43,6 +49,12 @@ RUN env \
 && make install \
 && ldconfig / \
 && cd / \
+&& git clone "https://github.com/mikebrady/nqptp.git" \
+&& cd nqptp \
+&& autoreconf -fi \
+&& ./configure \
+&& make \
+&& make install \
 && apk --purge del \
 	git \
         build-base \

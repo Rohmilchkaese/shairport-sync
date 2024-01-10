@@ -1,4 +1,4 @@
-FROM alpine:3.18.4
+FROM alpine:3.19.0
 ARG ALAC_BRANCH=tags/0.0.7
 ARG SHAIRPORT_BRANCH=4.3.2
 

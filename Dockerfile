@@ -69,6 +69,7 @@ RUN env \
         avahi \
         libconfig \
         libstdc++ \
+        libressl3.8-libssl \
 && rm -rf \
         /etc/ssl \
         /var/cache/apk/* \

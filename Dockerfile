@@ -1,6 +1,6 @@
-FROM alpine:3.19.0
+FROM alpine:3.20.1
 ARG ALAC_BRANCH=tags/0.0.7
-ARG SHAIRPORT_BRANCH=4.3.2
+ARG SHAIRPORT_BRANCH=4.3.4
 
 RUN env \
 && apk -U add \

@@ -1,45 +1,83 @@
-[![Docker](https://github.com/rohmilchkaese/shairport-sync/workflows/Docker/badge.svg)](https://hub.docker.com/repository/docker/rohmilkaese/shairport-sync/general)
+[![Build and Publish](https://github.com/Rohmilchkaese/shairport-sync/actions/workflows/docker.yml/badge.svg)](https://hub.docker.com/r/rohmilkaese/shairport-sync)
 
-# Shairport Sync as a Docker Image
+# Shairport Sync Docker Image
 
-[Shairport Sync](https://github.com/mikebrady/shairport-sync) is an Apple AirPlay receiver. It can receive audio directly from iOS devices, iTunes, etc. Multiple instances of Shairport Sync will stay in sync with each other and other AirPlay devices when used with a compatible multi-room player, such as iTunes or [forked-daapd](https://github.com/jasonmc/forked-daapd).
+A lightweight Docker image for [Shairport Sync](https://github.com/mikebrady/shairport-sync), an AirPlay audio receiver for Linux. Streams audio from iOS devices, iTunes, macOS, and other AirPlay sources. Multiple instances stay in sync for multi-room audio when used with a compatible player such as iTunes or [OwnTone](https://github.com/owntone/owntone-server).
 
-This Docker image provides an easy way to deploy Shairport Sync. Based on Alpine Linux, the image is very small and it is built for multiple platforms, making it suitable for embedded devices such as Raspberry Pi. Support for the Apple Lossless Audio Codec (ALAC) is included.
+Built on Alpine Linux for a minimal footprint. Targets `linux/arm/v7` (Raspberry Pi and similar ARM devices). Includes [Apple Lossless (ALAC)](https://github.com/mikebrady/alac) support.
 
-[See available images on Docker Hub.](https://hub.docker.com/r/rohmilkaese/shairport-sync)
+[Available on Docker Hub.](https://hub.docker.com/r/rohmilkaese/shairport-sync)
 
-This is a fork of the project by [Kevin Eye](https://github.com/kevineye/docker-shairport-sync).
+Fork of the original project by [Kevin Eye](https://github.com/kevineye/docker-shairport-sync).
 
+## Versions
 
-## Docker Run
+| Component | Version |
+|---|---|
+| Alpine Linux | 3.21 |
+| Shairport Sync | 4.3.7 |
+| Apple ALAC | 0.0.7 |
 
-Command:
+## Quick Start
+
+### Docker Run
 
 ```bash
-sudo docker run -d \
-    -v $PWD:/conf/ \
+docker run -d \
+    --name shairport-sync \
     --net host \
     --device /dev/snd \
-    --name shairport-sync \
-    rohmilkaese/shairport-sync \
+    -v $PWD/shairport.conf:/conf/shairport.conf \
+    rohmilkaese/shairport-sync:latest \
     -vu -c /conf/shairport.conf
 ```
-Place a valid shairport.conf file in directory you run the docker run command.
 
-## Docker Compose
+### Docker Compose
 
-docker-compose.yaml
-```bash
-version: "2.2"
+```yaml
 services:
-   shairport-sync:
+  shairport-sync:
     container_name: shairport-sync
     image: rohmilkaese/shairport-sync:latest
-    volumes:
-       - ./conf/shairport.conf:/conf/shairport.conf
+    network_mode: host
     devices:
-       - /dev/snd
-    command: -vu -c conf/shairport.conf
-    network_mode: "host"
+      - /dev/snd
+    volumes:
+      - ./shairport.conf:/conf/shairport.conf
+    command: -vu -c /conf/shairport.conf
 ```
-Place a valid shairport.conf file in /conf directory.
+
+## Configuration
+
+Place a `shairport.conf` file in the mount path. A minimal example:
+
+```
+general = {
+  name = "Kitchen";
+};
+
+alsa = {
+  output_device = "hw:0";
+  mixer_control_name = "PCM";
+};
+
+diagnostics = {
+  log_verbosity = 0;
+};
+```
+
+See [`shairport.conf.full`](shairport.conf.full) for all available options, or refer to the [upstream documentation](https://github.com/mikebrady/shairport-sync/blob/master/README.md).
+
+The `AIRPLAY_NAME` environment variable defaults to `Docker` and can be overridden with `-e AIRPLAY_NAME=MySpeaker`. This is the name that appears in AirPlay device lists when no config file is used.
+
+## Build Features
+
+The image is compiled with the following options:
+
+- **ALSA** -- Linux audio output
+- **Pipe** -- named pipe output
+- **Avahi** -- mDNS/Bonjour service discovery
+- **OpenSSL** -- TLS support
+- **SoX** -- high-quality audio resampling
+- **Metadata** -- track metadata support
+- **Apple ALAC** -- lossless audio codec

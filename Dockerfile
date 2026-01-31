@@ -1,6 +1,6 @@
-FROM alpine:3.20.1
+FROM alpine:3.21
 ARG ALAC_BRANCH=tags/0.0.7
-ARG SHAIRPORT_BRANCH=4.3.4
+ARG SHAIRPORT_BRANCH=4.3.7
 
 RUN env \
 && apk -U add \
@@ -12,7 +12,7 @@ RUN env \
 	alsa-lib-dev \
 	libdaemon-dev \
 	popt-dev \
-	libressl-dev \
+	openssl-dev \
 	soxr-dev \
 	avahi-dev \
 	xmltoman \
@@ -52,7 +52,7 @@ RUN env \
         alsa-lib-dev \
         libdaemon-dev \
         popt-dev \
-        libressl-dev \
+        openssl-dev \
         soxr-dev \
         avahi-dev \
         libconfig-dev \
@@ -64,12 +64,11 @@ RUN env \
         alsa-lib \
         libdaemon \
         popt \
-        libressl \
+        libssl3 \
         soxr \
         avahi \
         libconfig \
         libstdc++ \
-        libressl3.8-libssl \
 && rm -rf \
         /etc/ssl \
         /var/cache/apk/* \

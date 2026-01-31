@@ -27,12 +27,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Parse version from Dockerfile
+      - name: Determine version
         id: version
         run: |
           VERSION=$(grep -oP 'SHAIRPORT_BRANCH=\K[0-9.]+' Dockerfile)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Parsed version: $VERSION"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: rohmilkaese/shairport-sync
+          tags: |
+            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=latest
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -40,6 +48,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: |
-            rohmilkaese/shairport-sync:${{ steps.version.outputs.version }}
-            rohmilkaese/shairport-sync:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

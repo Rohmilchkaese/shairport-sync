@@ -55,7 +55,6 @@ RUN cd /root \
 		--with-ssl=openssl \
 		--with-soxr \
 		--with-metadata \
-		--with-apple-alac \
 		--with-airplay-2 \
 	&& make \
 	&& make install

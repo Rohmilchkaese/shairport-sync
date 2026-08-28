@@ -18,7 +18,7 @@ RUN apk add --no-cache \
 	xmltoman \
 	libconfig-dev \
 	libplist-dev \
-	libplist-utils \
+	libplist-util \
 	libsodium-dev \
 	libgcrypt-dev \
 	ffmpeg-dev \

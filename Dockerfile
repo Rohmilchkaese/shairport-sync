@@ -1,7 +1,7 @@
 FROM alpine:3.23 AS builder
 ARG ALAC_BRANCH=tags/0.0.7
 ARG NQPTP_BRANCH=1.2.8
-ARG SHAIRPORT_BRANCH=5.2.3
+ARG SHAIRPORT_BRANCH=5.5.1
 
 RUN apk add --no-cache \
 	git \
